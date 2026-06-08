@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv/
+
+# Environment variables
+.env
+.env.*
+
+# IDEs and Editors
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# App Specific
+radicale_storage/
+collections/
+radicale.log
+chroma/
+qdrant/
+*.db
+*.sqlite3
