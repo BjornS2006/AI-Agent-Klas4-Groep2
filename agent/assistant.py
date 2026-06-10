@@ -7,6 +7,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 
 from agent.agent import llm
+from agent.search import format_searxng_results, search_searxng
 from calendar.calendar_nodes import (
     analyseer_kalender_taak,
     bestaat_in_kalender,
@@ -63,10 +64,6 @@ class AssistantState:
     final_output: str = ""
 
 
-def spraak_naar_tekst(state: AssistantState) -> dict:
-    transcribed_text = state.raw_input
-    return {"raw_input": transcribed_text, "input_type": "text"}
-
 
 def analyseer_input(state: AssistantState) -> dict:
     prompt = f"""Analyseer de volgende gebruikersinput en bepaal welk protocol gevolgd moet worden.
@@ -104,6 +101,10 @@ Analyse:"""
     return {"output_text": response.content}
 
 
+def _search_query(state: AssistantState) -> str:
+    return state.search_query.strip() or state.raw_input.strip()
+
+
 def moet_opzoeken(state: AssistantState) -> dict:
     prompt = f"""Op basis van de volgende vraag, moet ik iets opzoeken?
 Antwoord met \"JA: <zoekterm>\" of \"NEE\".
@@ -125,11 +126,18 @@ def route_opzoeken(state: AssistantState) -> str:
 
 
 def opzoeken(state: AssistantState) -> dict:
-    results = f"Zoekresultaten voor: {state.search_query}"
-    return {"search_results": results}
+    query = _search_query(state)
+    results = search_searxng(query)
+    formatted_results = format_searxng_results(query, results)
+    if not formatted_results:
+        formatted_results = f"Geen zoekresultaten gevonden voor: {query}"
+    return {"search_results": formatted_results}
 
 
 def weet_ik_genoeg(state: AssistantState) -> dict:
+    if not state.search_results or state.search_results.startswith("Geen zoekresultaten") or state.search_results.startswith("SearxNG fout"):
+        return {"enough_info": True}
+
     prompt = f"""Heb ik genoeg informatie om de vraag van de gebruiker te beantwoorden?
 
 Oorspronkelijke vraag: {state.raw_input}
@@ -176,7 +184,6 @@ def text_output(state: AssistantState) -> dict:
 
 def build_graph() -> StateGraph:
     graph = StateGraph(AssistantState)
-    graph.add_node("spraak_naar_tekst", spraak_naar_tekst)
     graph.add_node("analyseer_input", analyseer_input)
     graph.add_node("memory_algemeen", memory_gebruiker_algemeen)
     graph.add_node("memory_personen", memory_gebruiker_personen)
@@ -204,8 +211,7 @@ def build_graph() -> StateGraph:
     graph.add_node("reminder_notificatie", reminder_notificatie)
     graph.add_node("text_to_speech", text_to_speech)
     graph.add_node("text_output", text_output)
-    graph.add_edge(START, "spraak_naar_tekst")
-    graph.add_edge("spraak_naar_tekst", "analyseer_input")
+    graph.add_edge(START, "analyseer_input")
     graph.add_edge("analyseer_input", "memory_algemeen")
     graph.add_edge("memory_algemeen", "memory_personen")
     graph.add_edge("memory_personen", "personen_opvragen")

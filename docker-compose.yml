@@ -1,0 +1,22 @@
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    ports:
+      - "8080:8080"
+    environment:
+      SEARXNG_BASE_URL: http://localhost:8080/
+      SEARXNG_SECRET: change-this-static-secret
+    volumes:
+      - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
+
+  app:
+    build: .
+    container_name: ai-agent-klas4
+    environment:
+      PORT: 8000
+      SEARXNG_BASE_URL: http://searxng:8080
+    depends_on:
+      - searxng
+    ports:
+      - "8000:8000"
