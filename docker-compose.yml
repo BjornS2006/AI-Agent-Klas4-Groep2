@@ -10,13 +10,33 @@ services:
     volumes:
       - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
 
+  radicale:
+    image: tomsquest/docker-radicale:latest
+    container_name: radicale
+    ports:
+      - "5232:5232"
+    volumes:
+      - radicale_data:/data
+    environment:
+      # Geen authenticatie nodig voor lokaal gebruik
+      RADICALE_AUTH__TYPE: none
+      RADICALE_SERVER__HOSTS: 0.0.0.0:5232
+
   app:
     build: .
     container_name: ai-agent-klas4
     environment:
       PORT: 8000
       SEARXNG_BASE_URL: http://searxng:8080
+      RADICALE_URL: http://radicale:5232
+      RADICALE_USERNAME: ""
+      RADICALE_PASSWORD: ""
+      CALENDAR_NAME: persoonlijke-assistent
     depends_on:
       - searxng
+      - radicale
     ports:
       - "8000:8000"
+
+volumes:
+  radicale_data:
