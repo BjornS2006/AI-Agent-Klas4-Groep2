@@ -23,6 +23,7 @@ class OllamaClient:
         return OllamaResponse(self._call_ollama(payload))
 
     def _call_ollama(self, payload: dict) -> str:
+        payload["stream"] = False 
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
             OLLAMA_URL,
