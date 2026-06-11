@@ -8,7 +8,7 @@ from langgraph.graph.message import add_messages
 
 from agent.agent import llm
 from agent.search import format_searxng_results, search_searxng
-from calendar.calendar_nodes import (
+from kalender_nodes.calendar_nodes import (
     analyseer_kalender_taak,
     bestaat_in_kalender,
     kalender_aanmaken,
