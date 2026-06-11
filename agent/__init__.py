@@ -1,4 +1,4 @@
-from .agent import llm, call_ollama, OllamaClient
+from .agent import llm, OllamaClient
 from .assistant import build_graph, compile_graph, run
 
 __all__ = [
