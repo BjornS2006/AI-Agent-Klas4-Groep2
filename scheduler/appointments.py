@@ -12,6 +12,7 @@ Configureer de constanten hieronder of via environment variables.
 """
 
 from __future__ import annotations
+from memory.mem0_config import mem0_client
 
 import logging
 import os
@@ -63,10 +64,12 @@ def _get_calendar(client: caldav.DAVClient) -> caldav.Calendar:
     return principal.make_calendar(name=CALENDAR_NAME)
 
 
-def _get_mem0() -> Memory:
-    """Geef een mem0 Memory-instantie terug."""
-    return Memory()
+# def _get_mem0() -> Memory:
+#     """Geef een mem0 Memory-instantie terug."""
+#     return Memory()
 
+def _get_mem0():
+    return mem0_client
 
 # ─── Datetime parsing ────────────────────────────
 
@@ -224,7 +227,7 @@ def _remove_existing_reminder(uid: str) -> None:
         m = _get_mem0()
         results = m.search(
             f"calendar_reminder uid:{uid}",
-            user_id=MEM0_USER_ID,
+            filters={"user_id": MEM0_USER_ID},
         )
         for entry in results.get("results", []):
             meta = entry.get("metadata", {})
