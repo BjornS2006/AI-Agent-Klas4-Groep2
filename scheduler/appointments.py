@@ -12,6 +12,7 @@ Configureer de constanten hieronder of via environment variables.
 """
 
 from __future__ import annotations
+from memory.mem0_config import mem0_client
 
 import logging
 import os
@@ -70,6 +71,8 @@ def _get_mem0() -> Memory:
         raise RuntimeError("mem0 is niet geïnitialiseerd")
     return mem0_client
 
+def _get_mem0():
+    return mem0_client
 
 # ─── Datetime parsing ────────────────────────────
 
