@@ -64,8 +64,11 @@ def _get_calendar(client: caldav.DAVClient) -> caldav.Calendar:
 
 
 def _get_mem0() -> Memory:
-    """Geef een mem0 Memory-instantie terug."""
-    return Memory()
+    """Geef de geconfigureerde mem0 instantie terug."""
+    from memory.memory_nodes import mem0_client
+    if mem0_client is None:
+        raise RuntimeError("mem0 is niet geïnitialiseerd")
+    return mem0_client
 
 
 # ─── Datetime parsing ────────────────────────────
@@ -224,7 +227,7 @@ def _remove_existing_reminder(uid: str) -> None:
         m = _get_mem0()
         results = m.search(
             f"calendar_reminder uid:{uid}",
-            user_id=MEM0_USER_ID,
+            filters={"user_id": MEM0_USER_ID},
         )
         for entry in results.get("results", []):
             meta = entry.get("metadata", {})

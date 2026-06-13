@@ -56,7 +56,7 @@ def _search_reminders_in_mem0(query: str) -> list[dict]:
     """
     try:
         m = _get_mem0()
-        results = m.search(query, user_id=MEM0_USER_ID)
+        results = m.search(query, filters={"user_id": MEM0_USER_ID})
         return [
             entry
             for entry in results.get("results", [])
@@ -597,7 +597,7 @@ def reminder_notificatie(state):
     try:
         m = _get_mem0()
         # Haal alle reminder-memories op
-        all_memories = m.get_all(user_id=MEM0_USER_ID)
+        all_memories = m.get_all(filters={"user_id": MEM0_USER_ID})
 
         due_reminders: list[dict] = []
 

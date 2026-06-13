@@ -8,14 +8,14 @@ def init_mem0_client():
             "provider": "ollama",
             "config": {
                 "model": "gemma4:e2b",
-                "base_url": "http://localhost:11434",
+                "ollama_base_url": "http://localhost:11434",
             },
         },
         "embedder": {
             "provider": "ollama",
             "config": {
                 "model": "nomic-embed-text",
-                "base_url": "http://localhost:11434",
+                "ollama_base_url": "http://localhost:11434",
             },
         },
         "storage": {
