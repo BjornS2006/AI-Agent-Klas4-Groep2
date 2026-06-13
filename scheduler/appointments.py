@@ -57,7 +57,7 @@ def _get_calendar(client: caldav.DAVClient) -> caldav.Calendar:
     """
     principal = client.principal()
     for cal in principal.calendars():
-        if cal.name == CALENDAR_NAME:
+        if cal.get_display_name() == CALENDAR_NAME:
             return cal
     # Kalender bestaat nog niet → aanmaken
     logger.info("Kalender '%s' niet gevonden – wordt aangemaakt.", CALENDAR_NAME)
@@ -139,7 +139,7 @@ def _build_ical(details: dict) -> tuple[str, str, datetime, datetime]:
         event.add("location", details["location"])
 
     # Tijdstempels
-    now = datetime.utcnow()
+    now = datetime.now()
     event.add("created", now)
     event.add("last-modified", now)
 
@@ -281,7 +281,7 @@ def check_event_exists(details: dict) -> bool:
         search_start = start.replace(hour=0, minute=0, second=0)
         search_end = end.replace(hour=23, minute=59, second=59)
 
-        events = calendar.date_search(
+        events = calendar.search(
             start=search_start,
             end=search_end,
             expand=True,

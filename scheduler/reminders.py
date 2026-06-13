@@ -97,7 +97,7 @@ def _search_reminders_in_caldav(
         client = _get_caldav_client()
         calendar = _get_calendar(client)
 
-        search_start = start or datetime.utcnow().replace(
+        search_start = start or datetime.now().replace(
             hour=0, minute=0, second=0, microsecond=0,
         )
         search_end = search_start + timedelta(days=days_range)
@@ -160,7 +160,7 @@ def _mark_event_status(uid: str, new_status: str) -> bool:
             if component.name != "VEVENT":
                 continue
             component["status"] = new_status
-            component["last-modified"] = datetime.utcnow()
+            component["last-modified"] = datetime.now()
             break
 
         event.data = cal.to_ical().decode("utf-8")
@@ -492,7 +492,7 @@ def maak_taak_reminder(state):
         details["summary"] = details.get("raw_analysis", "Nieuwe taak")[:80]
     if not details.get("start"):
         # Fallback: 1 uur vanaf nu
-        fallback = datetime.utcnow() + timedelta(hours=1)
+        fallback = datetime.now() + timedelta(hours=1)
         details["start"] = fallback.strftime("%Y-%m-%dT%H:%M")
         logger.warning("Geen starttijd opgegeven – fallback naar %s", details["start"])
 
@@ -591,7 +591,7 @@ def reminder_notificatie(state):
     5 minuten valt). Retourneert de details zodat de
     agent de gebruiker kan waarschuwen.
     """
-    now = datetime.utcnow()
+    now = datetime.now()
     window = now + timedelta(minutes=5)
 
     try:
