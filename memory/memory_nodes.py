@@ -9,9 +9,9 @@ def memory_gebruiker_algemeen(state):
     user_mem = {}
     if mem0_client:
         try:
-            memories = mem0_client.recall(
-                "general user facts, preferences, and characteristics",
-                user_id="default_user"
+            memories = mem0_client.search(
+                query="general user facts, preferences, and characteristics",
+                filters={'user_id': "default_user"}
             )
             user_mem = {"facts": memories} if memories else {}
         except Exception as e:
@@ -27,9 +27,9 @@ def memory_gebruiker_personen(state):
     person_mem = {}
     if mem0_client:
         try:
-            memories = mem0_client.recall(
-                "names, contact information, and details about known people and contacts",
-                user_id="default_user"
+            memories = mem0_client.search(
+                query="names, contact information, and details about known people and contacts",
+                filters={'user_id': "default_user"}
             )
             person_mem = {"contacts": memories} if memories else {}
         except Exception as e:

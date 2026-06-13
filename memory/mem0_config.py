@@ -1,4 +1,6 @@
 from mem0 import Memory
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="mem0")
 
 
 def init_mem0_client():
@@ -22,7 +24,7 @@ def init_mem0_client():
     "vector_store": {
         "provider": "qdrant",
         "config": {
-            "collection_name": "mem0",
+            "collection_name": "mem0_768",
             "embedding_model_dims": 768,
         },
     },

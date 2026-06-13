@@ -37,6 +37,8 @@ class OllamaClient:
             return f"[Ollama error: {exc}]"
 
         if isinstance(body, dict):
+            if "message" in body:                         
+                return body["message"].get("content", "")
             if "response" in body:
                 return body["response"]
             if "content" in body:

@@ -296,4 +296,4 @@ def run(user_input: str, input_type: str = "text"):
         "input_type": input_type,
     }
     result = app.invoke(initial_state)
-    return result
+    return result.get("final_output") or result.get("output_text", "Geen antwoord.")
