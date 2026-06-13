@@ -12,4 +12,6 @@ COPY . ./
 
 EXPOSE 8000
 
-CMD ["python", "app_server.py"]
+RUN chmod +x entrypoint.sh
+
+CMD ["./entrypoint.sh"]

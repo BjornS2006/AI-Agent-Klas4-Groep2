@@ -2,7 +2,7 @@ import json
 import urllib.request
 import urllib.error
 
-OLLAMA_URL = "http://localhost:11434/api/chat"
+OLLAMA_URL = "http://host.docker.internal:11434/api/chat"
 MODEL = "gemma4:e2b"
 
 

@@ -33,6 +33,7 @@ from scheduler.reminders import (
     voer_taak_uit,
     zeg_veranderingen_vraag_toestemming,
 )
+from agent.tts_engine import PiperTTS
 
 
 @dataclass
@@ -62,7 +63,8 @@ class AssistantState:
     general_memory: dict = field(default_factory=dict)
     output_text: str = ""
     final_output: str = ""
-
+    tts_enabled: bool = False
+    tts_model: str = ""
 
 
 def analyseer_input(state: AssistantState) -> dict:
@@ -175,6 +177,9 @@ Antwoord:"""
 
 
 def text_to_speech(state: AssistantState) -> dict:
+    if state.tts_enabled:
+        tts = PiperTTS(model_path=state.tts_model)
+        tts.speak(state.output_text)
     return {"final_output": state.output_text}
 
 
